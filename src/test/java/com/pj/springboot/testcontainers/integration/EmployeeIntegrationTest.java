@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -58,7 +59,8 @@ class EmployeeIntegrationTest extends BaseTest {
     void testCreateEmployee() throws Exception {
         var employeeDTO = new EmployeeDTO("Michael", "Scott", "scottm@example.com", "123-785-5545");
         MvcResult mvcResult =
-                this.mockMvc.perform(post("/api/v1/employee/create").content(objectMapper.writeValueAsString(employeeDTO))).andExpect(status().isOk())
+                this.mockMvc.perform(post("/api/v1/employee/create").content(objectMapper.writeValueAsString(employeeDTO))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                         .andReturn();
         var employee = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Employee.class);
         assertEquals(employeeDTO.getEmail(),employee.getEmail());
