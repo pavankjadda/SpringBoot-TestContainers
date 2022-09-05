@@ -49,14 +49,21 @@ class EmployeeIntegrationTest extends BaseTest {
 
     @Test
     @Sql({"/import.sql"})
-    void testFindAllEmployees() throws Exception {
+    void findAll_ReturnAllEmployees_WhenImportedDataViaSqlFile() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get("/api/v1/employee/find/all")).andExpect(status().isOk()).andReturn();
         var employees = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Employee[].class);
         assertTrue(Arrays.stream(employees).anyMatch(employee -> employee.getEmail().equals("jdoe@example.com")));
     }
 
     @Test
-    void testCreateEmployee() throws Exception {
+    void findAll_ReturnNoEmployees_WhenDataIsNotImported() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/v1/employee/find/all")).andExpect(status().isOk()).andReturn();
+        var employees = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Employee[].class);
+        assertFalse(Arrays.stream(employees).anyMatch(employee -> employee.getEmail().equals("jdoe@example.com")));
+    }
+
+    @Test
+    void create_ReturnCreatedEmployee_IfValidInformationProvided() throws Exception {
         var employeeDTO = new EmployeeDTO("Michael", "Scott", "scottm@example.com", "123-785-5545");
         MvcResult mvcResult =
                 this.mockMvc.perform(post("/api/v1/employee/create").content(objectMapper.writeValueAsString(employeeDTO))
