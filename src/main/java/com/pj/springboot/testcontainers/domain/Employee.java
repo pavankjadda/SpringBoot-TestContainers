@@ -2,7 +2,7 @@ package com.pj.springboot.testcontainers.domain;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 
