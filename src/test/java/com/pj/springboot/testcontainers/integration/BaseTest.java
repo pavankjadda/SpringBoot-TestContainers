@@ -11,8 +11,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public class BaseTest {
     @Container
-    public static MySQLContainer mySQLContainer = new MySQLContainer("mysql:latest");
-
+    public static MySQLContainer mySQLContainer = (MySQLContainer) new MySQLContainer("mysql:latest").withInitScript("import.sql");
+    
     static {
         mySQLContainer.withReuse(true);
         mySQLContainer.start();
